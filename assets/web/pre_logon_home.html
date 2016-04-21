@@ -1,0 +1,110 @@
+<html>
+
+<head>
+    <script language="JavaScript">
+        // Define the UI variables, should match the TAG in native XIB
+        var WEBVIEW_TAG = "10";
+        var SPINNER_TAG = "11";
+        var LEFT_BUTTON_TAG = "2";
+        var RIGHT_BUTTON_TAG = "3";
+        var LOGON_BUTTON_TAG = "5";
+        var FULL_WEBSITE_BUTTON_TAG = "6";
+        var HELP_BUTTON_TAG = "7";
+        
+        // Define the Screen Transition
+        var RIGHT_TO_LEFT = "1";
+        var LEFT_TO_RIGHT = "2";
+        var BOTTOM_TO_TOP = "3";
+        var TOP_TO_BOTTOM = "4";
+        
+        // Observer Handling
+        function notifyUiObserver(tag, key, value) {
+            // Put all the handling we want to observe
+            if (tag == WEBVIEW_TAG) {
+                webviewListener(key, value);
+                return;
+            }
+            
+            if (tag == LEFT_BUTTON_TAG ||
+                tag == RIGHT_BUTTON_TAG ||
+                tag == LOGON_BUTTON_TAG ||
+                tag == FULL_WEBSITE_BUTTON_TAG ||
+                tag == HELP_BUTTON_TAG)
+            {
+                buttonListener(tag, key, value);
+                return;
+            }
+        }
+    
+        // Observer Handling
+        function webviewListener(key, value) {
+            if (key=="loadingStatus" && value=="0") {//webview loading finish
+                // nothing to do
+                return;
+            }
+        }
+    
+        // Observer Handling
+        function buttonListener(tag, key, value) {
+            if (tag == LEFT_BUTTON_TAG)
+            {
+                backPrevView(BOTTOM_TO_TOP);
+                return;
+            }
+            
+            if (tag == RIGHT_BUTTON_TAG)
+            {
+                loadNextView("HsbcUIWebviewController", "In_App_Webview", "http://www.apple.com", BOTTOM_TO_TOP);
+                return;
+            }
+            
+            if (tag == LOGON_BUTTON_TAG)
+            {
+                loadNextView("HsbcUISlideWebviewController", "PostLogon_BaseView", "post_logon_base", RIGHT_TO_LEFT);
+                return;
+            }
+            
+            if (tag == FULL_WEBSITE_BUTTON_TAG)
+            {
+                loadNextView("HsbcUIWebviewController", "In_App_Webview", "hsbc_website", RIGHT_TO_LEFT);
+                return;
+            }
+        }
+    
+        // Hook API
+        function setterUi(tag, key, value) {
+            window.location = "hsbc://" + urlEncode("function=SetterUI&tag=" + tag + "&key=" + key + "&value=" + value);
+        }
+    
+        // Hook API
+        function loadNextView(controller, xib, html, screenTransition) {
+            window.location = "hsbc://" + urlEncode("function=LoadNextView&controller=" + controller + "&xib=" + xib + "&html=" + html + "&transition=" + screenTransition);
+        }
+    
+        // Hook API
+        function backPrevView(screenTransition) {
+            window.location = "hsbc://" + urlEncode("function=BackPrevView&transition=" + screenTransition);
+        }
+        
+        // Utility Method
+        function urlEncode(url) {
+            if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
+                // for iOS only !!!
+                return escape(url);
+            } else {
+                return url;
+            }
+        }
+    
+        // Utility Method
+        function delay(milliseconds) {
+            var e = new Date().getTime() + (milliseconds);
+            while (new Date().getTime() <= e) {}
+        }
+    </script>
+</head>
+
+<body>
+</body>
+
+</html>

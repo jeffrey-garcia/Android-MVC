@@ -1,0 +1,99 @@
+<html>
+    
+    <head>
+        <script language="JavaScript">
+            // Define the UI variables, should match the TAG in native XIB
+            var LEFT_BUTTON_TAG = "2";
+            var WEBVIEW_TAG = "3";
+            var SPINNER_TAG = "4";
+            
+            // Define the Screen Transition
+            var RIGHT_TO_LEFT = "1";
+            var LEFT_TO_RIGHT = "2";
+            var BOTTOM_TO_TOP = "3";
+            var TOP_TO_BOTTOM = "4";
+            
+            // Observer Handling
+            function notifyUiObserver(tag, key, value) {
+                // Put all the handling we want to observe
+                if (tag == WEBVIEW_TAG) {
+                    webviewListener(key, value);
+                    return;
+                }
+                
+                if (tag == LEFT_BUTTON_TAG)
+                {
+                    buttonListener(tag, key, value);
+                    return;
+                }
+            }
+        
+        // Observer Handling
+        function webviewListener(key, value) {
+            if (key=="loadingStatus" && value=="0") {//webview loading finish
+                //make the webview visible
+                setterUi(WEBVIEW_TAG, "hidden", 0);
+                return;
+            }
+            
+            if (key=="hidden" && value=="0") {//webview is now visible
+                setterUi(RIGHT_BUTTON_TAG, "hidden", 1);
+                return;
+            }
+        }
+        
+        // Observer Handling
+        function buttonListener(tag, key, value) {
+            if (tag == LEFT_BUTTON_TAG)
+            {
+                backPrevView(LEFT_TO_RIGHT);
+                return;
+            }
+            
+            if (tag == RIGHT_BUTTON_TAG)
+            {
+                // to be implemented...
+                return;
+            }
+        }
+        
+        // Hook API
+        function setterUi(tag, key, value) {
+            window.location = "hsbc://" + urlEncode("function=SetterUI&tag=" + tag + "&key=" + key + "&value=" + value);
+        }
+        
+        // Hook API
+        function loadNextView(controller, xib, html, screenTransition) {
+            window.location = "hsbc://" + urlEncode("function=LoadNextView&controller=" & controller & "xib=" + xib + "&html=" + html + "&transition=" + screenTransition);
+        }
+        
+        // Hook API
+        function backPrevView(screenTransition) {
+            window.location = "hsbc://" + urlEncode("function=BackPrevView&transition=" + screenTransition);
+        }
+        
+        // Utility Method
+        function urlEncode(url) {
+            if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
+                // for iOS only !!!
+                return escape(url);
+            } else {
+                return url;
+            }
+        }
+        
+        // Utility Method
+        function delay(milliseconds) {
+            var e = new Date().getTime() + (milliseconds);
+            while (new Date().getTime() <= e) {}
+        }
+        </script>
+    </head>
+    
+    <body>
+        <iframe src="http://www.hsbc.com.hk/mobile/index.html" style="width:100%; height:100%; border:0">
+            <p>Your browser does not support iframes.</p>
+        </iframe>
+    </body>
+    
+</html>

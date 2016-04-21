@@ -1,0 +1,74 @@
+<html>
+
+    <head>
+        <script language="JavaScript">
+            // Define the UI variables, should match the TAG in native XIB
+            var LEFT_BUTTON_TAG = "2";
+            var WEBVIEW_TAG = "3";
+            var SPINNER_TAG = "4";
+            
+            // These are the TAG for the sliding webview controller,
+            // corresponding to HsbcUISlideWebviewController
+            var BASE_VIEW_TAG = "-1";
+            var MAIN_VIEW_TAG = "-2";
+            var LEFT_VIEW_TAG = "-3";
+            var RIGHT_VIEW_TAG = "-4";
+            
+            // Observer Handling
+            function notifyUiObserver(tag, key, value) {
+                // Put all the handling we want to observe
+                if (tag == WEBVIEW_TAG) {
+                    webviewListener(key, value);
+                    return;
+                }
+                
+                if (tag == RIGHT_BUTTON_TAG ||
+                    tag == LEFT_BUTTON_TAG)
+                    {
+                        buttonListener(tag, key, value);
+                        return;
+                    }
+            }
+        
+            // Observer Handling
+            function webviewListener(key, value) {
+                if (key=="loadingStatus" && value=="0") {//webview loading finish
+                    //make the webview visible
+                    setterUi(WEBVIEW_TAG, "hidden", 0);
+                    return;
+                }
+            
+                if (key=="hidden" && value==0) {//webview becomes visible
+                    // to be implemented
+                }
+            }
+        
+            // Hook API
+            function setterUi(tag, key, value) {
+                window.location = "hsbc://" + urlEncode("function=SetterUI&tag=" + tag + "&key=" + key + "&value=" + value);
+            }
+        
+            // Utility Method
+            function urlEncode(url) {
+                if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
+                    // for iOS only !!!
+                    return escape(url);
+                } else {
+                    return url;
+                }
+            }
+        
+            // Utility Method
+            function delay(milliseconds) {
+                var e = new Date().getTime() + (milliseconds);
+                while (new Date().getTime() <= e) {}
+            }
+        
+        </script>
+    </head>
+
+    <body bgcolor="#C0C0C0">
+        <h1>Post Logon Left</h1>
+    </body>
+
+</html>

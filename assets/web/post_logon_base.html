@@ -1,0 +1,94 @@
+<html>
+    
+    <head>
+        <script language="JavaScript">
+            // Define the UI variables, should match the TAG in native XIB
+            var WEBVIEW_TAG = "2";
+            
+            // These are the TAG for the sliding webview controller,
+            // corresponding to HsbcUISlideWebviewController
+            var BASE_VIEW_TAG = "-1";
+            var MAIN_VIEW_TAG = "-2";
+            var LEFT_VIEW_TAG = "-3";
+            var RIGHT_VIEW_TAG = "-4";
+            
+            // Observer Handling
+            function notifyUiObserver(tag, key, value) {
+                // Put all the handling we want to observe
+                if (tag == WEBVIEW_TAG) {
+                    webviewListener(key, value);
+                    return;
+                }
+                
+                if (tag == BASE_VIEW_TAG) {
+                    slideWebviewListener(key, value);
+                    return;
+                }
+            }
+        
+            // Observer Handling
+            function webviewListener(key, value) {
+                if (key=="loadingStatus" && value=="0") {//webview loading finish
+                    //make the webview visible
+                    setterUi(WEBVIEW_TAG, "hidden", 0);
+                    return;
+                }
+                
+                if (key=="hidden" && value==0) {//webview becomes visible
+                    //init the main UI Slide Webview
+                    initUiSlideWebview("HsbcUIWebviewController", "PostLogon_MainView", "post_logon_main", MAIN_VIEW_TAG);
+                    return;
+                }
+            }
+        
+            // Observer Handling
+            function slideWebviewListener(key, value) {
+                /* Not really expecting javascript to handle anything
+                 * specific here but this is the place for javascript
+                 * to get informed about events happened with the 
+                 * sub-webviews contains by the base slide webview
+                 */
+                
+                if (key=="mainViewEnabled" && value=="1") {//main view is initialized
+                    //init the left UI Slide Webview
+                    initUiSlideWebview("HsbcUIWebviewController", "PostLogon_LeftView", "post_logon_left", LEFT_VIEW_TAG);
+                    return;
+                }
+                
+                if (key=="leftViewEnabled" && value=="1") {//left view is initialized
+                    return;
+                }
+            }
+        
+            // Hook API
+            function setterUi(tag, key, value) {
+                window.location = "hsbc://" + urlEncode("function=SetterUI&tag=" + tag + "&key=" + key + "&value=" + value);
+            }
+        
+            // Hook API
+            function initUiSlideWebview(controller, xib, html, viewTag) {
+                window.location = "hsbc://" + urlEncode("function=InitUISlideWebview&controller=" + controller + "&xib=" + xib + "&html=" + html + "&viewTag=" + viewTag);
+            }
+        
+            // Utility Method
+            function urlEncode(url) {
+                if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
+                    // for iOS only !!!
+                    return escape(url);
+                } else {
+                    return url;
+                }
+            }
+        
+            // Utility Method
+            function delay(milliseconds) {
+                var e = new Date().getTime() + (milliseconds);
+                while (new Date().getTime() <= e) {}
+            }
+        </script>
+    </head>
+    
+    <body bgcolor="#303030">
+    </body>
+    
+</html>

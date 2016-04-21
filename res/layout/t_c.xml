@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="${relativePackage}.${activityClass}">
+    
+	<TextView
+	    android:id="@+id/title"
+	    android:layout_alignParentTop="true"
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:padding="15dip"
+	    android:textColor="#FFF"
+	    android:textStyle="bold"
+	    android:textSize="18dp"
+	    android:text="TextView"
+	    android:gravity="center">
+	</TextView>
+    
+	<!-- button has to be defined before webview, a stupid issue with Android layout designer -->
+    <com.jeffrey.hsbcui.HsbcButton
+        android:id="@+id/button"
+        android:tag="2" 
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/hsbc_button"
+        android:text="Button"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+    
+    <com.jeffrey.hsbcui.HsbcWebView
+        android:id="@+id/webview"
+        android:tag="3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title"
+        android:layout_above="@id/button"
+        android:isScrollContainer="false" />
+    
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:tag="4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+    </ProgressBar>
+    
+</RelativeLayout>

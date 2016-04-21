@@ -1,0 +1,118 @@
+<html>
+    
+    <head>
+        <script language="JavaScript">
+            // Define the UI variables, should match the TAG in native XIB
+            var WEBVIEW_TAG = "5";
+            var SPINNER_TAG = "6";
+            var LEFT_BUTTON_TAG = "3";
+            var RIGHT_BUTTON_TAG = "4";
+            
+            // These are the TAG for the sliding webview controller,
+            // corresponding to HsbcUISlideWebviewController
+            var BASE_VIEW_TAG = "-1";
+            var MAIN_VIEW_TAG = "-2";
+            var LEFT_VIEW_TAG = "-3";
+            var RIGHT_VIEW_TAG = "-4";
+            
+            // Local state variable
+            var isLeftPanelHidden = 1; // default is hidden
+            
+            // Observer Handling
+            function notifyUiObserver(tag, key, value) {
+                // Put all the handling we want to observe
+                if (tag == WEBVIEW_TAG) {
+                    webviewListener(key, value);
+                    return;
+                }
+                
+                if (tag == RIGHT_BUTTON_TAG ||
+                    tag == LEFT_BUTTON_TAG)
+                {
+                    buttonListener(tag, key, value);
+                    return;
+                }
+                
+                if (tag == BASE_VIEW_TAG) {
+                    slideWebviewListener(key, value);
+                    return;
+                }
+            }
+        
+            // Observer Handling
+            function webviewListener(key, value) {
+                if (key=="loadingStatus" && value=="0") {//webview loading finish
+                    //make the webview visible
+                    setterUi(WEBVIEW_TAG, "hidden", 0);
+                    return;
+                }
+            
+                if (key=="hidden" && value==0) {//webview becomes visible
+                    // to be implemented
+                }
+            }
+        
+            // Observer Handling
+            function buttonListener(tag, key, value) {
+                if (tag == LEFT_BUTTON_TAG)
+                {
+                    if (key=="clicked" && value=="1") {
+                        getterUi(BASE_VIEW_TAG, "leftViewHidden");
+                        return;
+                    }
+                }
+            
+                if (tag == RIGHT_BUTTON_TAG)
+                {
+                    // to be implemented
+                    return;
+                }
+            }
+        
+            // Polling
+            function pollingUiComponent(tag, key, value) {
+                if (key=="leftViewHidden") {
+                    if (value=="0") {
+                        //left view is currently visible, set to hidden
+                        setterUi(BASE_VIEW_TAG, "leftViewHidden", 1);
+                    } else {
+                        //left view is currently hidden, set to visible
+                        setterUi(BASE_VIEW_TAG, "leftViewHidden", 0);
+                    }
+                    return;
+                }
+            }
+        
+            // Hook API
+            function setterUi(tag, key, value) {
+                window.location = "hsbc://" + urlEncode("function=SetterUI&tag=" + tag + "&key=" + key + "&value=" + value);
+            }
+        
+            // Hook API
+            function getterUi(tag, key) {
+                window.location = "hsbc://" + urlEncode("function=GetterUI&tag=" + tag + "&key=" + key + "&callbackJs=pollingUiComponent");
+            }
+        
+            // Utility Method
+            function urlEncode(url) {
+                if (navigator.userAgent.match(/(iPad|iPhone|iPod)/g)) {
+                    // for iOS only !!!
+                    return escape(url);
+                } else {
+                    return url;
+                }
+            }
+        
+            // Utility Method
+            function delay(milliseconds) {
+                var e = new Date().getTime() + (milliseconds);
+                while (new Date().getTime() <= e) {}
+            }
+        </script>
+    </head>
+    
+    <body>
+        <h1>Post Logon Main</h1>
+    </body>
+    
+</html>
